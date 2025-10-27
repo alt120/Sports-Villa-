@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sports Villa — Cricket Box Booking</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07110a;--panel:#0b1a12;--accent:#00c76b;--accent-2:#00ff88;--muted:#98a8a0;--glass: rgba(255,255,255,0.03);--card-shadow: 0 10px 30px rgba(0,0,0,0.6);}*{box-sizing:border-box}
+body{margin:0;font-family:'Poppins',system-ui,Arial;background: linear-gradient(180deg,#04120a 0%, #07110a 100%);color:#e6efe8;-webkit-font-smoothing:antialiased;min-height:100vh}
+.container{max-width:1100px;margin:22px auto;padding:20px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo-img{width:72px;height:72px;border-radius:12px;overflow:hidden;flex:0 0 72px;box-shadow:0 6px 20px rgba(0,0,0,0.6);background:linear-gradient(180deg, rgba(0,0,0,0.15), rgba(255,255,255,0.02));display:flex;align-items:center;justify-content:center}
+.brand h1{font-size:20px;margin:0;letter-spacing:0.3px;text-shadow:0 0 8px rgba(0,200,107,0.12)}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.top-actions{display:flex;gap:10px;align-items:center}
+.btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#062613;padding:10px 14px;border-radius:12px;border:0;font-weight:700;cursor:pointer}
+.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 12px;border-radius:10px;cursor:pointer}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:var(--card-shadow);margin-top:18px}
+.grid{display:grid;grid-template-columns:1fr 380px;gap:18px}@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.form-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}.form-col{flex:1;min-width:170px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+input,select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+input:focus,select:focus{outline:none;box-shadow:0 0 14px rgba(0,200,107,0.06);border-color:var(--accent-2)}
+.small{font-size:13px;color:var(--muted)}
+.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#062613;border:0;padding:11px 14px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 8px 26px rgba(0,200,107,0.12)}
+.slot{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);margin-bottom:8px;transition:transform .12s}
+.slot:hover{transform:translateY(-3px)}
+.available{color:#8df7b6;font-weight:700}
+.partial{color:#ffd86b;font-weight:800}
+.full{color:#ff8b8b;font-weight:800}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:120;opacity:0;pointer-events:none;transition:opacity .18s}
+.modal-wrapper{background:linear-gradient(180deg,#07110a,#07110a);padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 60px rgba(0,0,0,0.7);width:92%;max-width:520px;text-align:center}
+.modal-title{color:var(--accent);font-size:20px;margin-bottom:8px}
+.modal p{color:#dff6e6;margin-bottom:12px}
+.modal .actions{display:flex;gap:10px;justify-content:center}
+.qr-img{width:220px;height:220px;border-radius:8px;border:8px solid rgba(255,255,255,0.02);background:#fff;margin:12px auto;display:block;object-fit:contain}
+.qr-instruction{color:var(--muted);font-size:14px;margin-bottom:8px}
+.admin-row{display:flex;justify-content:space-between;gap:8px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);margin-bottom:8px}
+.admin-row button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer}
+.show{opacity:1;pointer-events:auto}
+.show .modal-wrapper{transform:translateY(0)}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="brand">
+      <div class="logo-img">
+        <img src="logo.jpg" alt="Sports Villa" style="width:100%;height:100%;object-fit:cover;display:block">
+      </div>
+      <div>
+        <h1>Sports Villa — Cricket Box</h1>
+        <p class="small">Premium turf • Book slots 6:00 — 02:00</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn" onclick="document.getElementById('bookingSection').scrollIntoView({behavior:'smooth'})">Book Now</button>
+      <button id="adminBtn" class="ghost">Admin Login</button>
+    </div>
+  </header>
+
+  <div class="card" id="bookingSection">
+    <div class="grid">
+      <main>
+        <h3 style="margin:0">Book Your Slot</h3>
+
+        <div class="form-row" style="margin-top:12px">
+          <div class="form-col">
+            <label for="date">Select Date</label>
+            <input id="date" type="date">
+          </div>
+          <div class="form-col">
+            <label for="startSlot">Start Slot</label>
+            <select id="startSlot"></select>
+          </div>
+          <div class="form-col">
+            <label for="hours">Hours</label>
+            <input id="hours" type="number" min="1" max="10" value="1">
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top:12px">
+          <div class="form-col">
+            <label for="name">Your Name</label>
+            <input id="name" type="text" placeholder="Full name">
+          </div>
+          <div class="form-col">
+            <label for="phone">Phone</label>
+            <input id="phone" type="tel" placeholder="03xxxxxxxxx">
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <button id="bookBtn" class="primary">Confirm & Pay</button>
+          <div id="msg" class="small" style="margin-top:8px"></div>
+        </div>
+
+        <section style="margin-top:18px">
+          <h4 style="margin:0 0 8px 0">Today's Slots</h4>
+          <div id="slotsContainer"></div>
+        </section>
+
+      </main>
+
+      <aside>
+        <div style="margin-bottom:12px">
+          <h4 style="margin:0 0 8px 0">Bookings</h4>
+          <label class="small" for="viewDate">Select Date</label>
+          <input id="viewDate" type="date" style="margin-top:6px">
+          <div id="bookingsList" style="margin-top:12px;max-height:380px;overflow:auto"></div>
+        </div>
+
+        <div id="adminPanel" style="display:none;margin-top:12px">
+          <h4 style="margin-top:0">Admin</h4>
+          <div style="margin-top:8px">
+            <label class="small" for="filterDate">Filter date</label>
+            <input id="filterDate" type="date" style="margin-top:6px">
+          </div>
+          <div id="adminRows" style="margin-top:10px"></div>
+          <div style="margin-top:8px">
+            <button id="exportBtn" class="btn">Export CSV</button>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+
+  <footer style="margin-top:18px" class="small">Sports Villa © — Premium Cricket Box Booking</footer>
+</div>
+
+<!-- UPI Modal (QR + instructions) -->
+<div id="upiModal" class="modal-overlay">
+  <div class="modal-wrapper">
+    <div class="modal-title">Scan & Pay</div>
+    <p id="upiText" class="qr-instruction">Scan the QR or use UPI ID</p>
+    <img id="upiQR" class="qr-img" src="qr.jpg" alt="UPI QR">
+    <div class="actions" style="margin-top:8px">
+      <button id="paidBtn" class="primary">I Have Paid</button>
+      <button id="upiClose" class="ghost">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation modal -->
+<div id="confirmModal" class="modal-overlay">
+  <div class="modal-wrapper">
+    <div class="modal-title">🎉 Payment Received — Slot Confirmed!</div>
+    <p>Your slot(s) have been reserved and confirmed. See details in Bookings.</p>
+    <div class="actions"><button id="confirmOk" class="primary">OK</button></div>
+  </div>
+</div>
+
+<!-- Admin login modal -->
+<div id="adminModal" class="modal-overlay">
+  <div class="modal-wrapper">
+    <div class="modal-title">Admin Login</div>
+    <p class="small">Enter credentials to access admin dashboard</p>
+    <div style="text-align:left;margin-top:8px">
+      <label class="small">Username</label>
+      <input id="adminUser" type="text" style="margin-top:6px">
+      <label class="small" style="margin-top:8px">Password</label>
+      <input id="adminPass" type="password" style="margin-top:6px">
+      <div style="margin-top:12px;display:flex;gap:8px;justify-content:center">
+        <button id="adminLoginBtn" class="primary">Login</button>
+        <button id="adminCloseBtn" class="ghost">Close</button>
+      </div>
+      <div id="adminMsg" class="small" style="margin-top:8px"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// === Configuration ===
+const SLOTS=["06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00","00:00","01:00"];
+// DOM
+const slotSelect=document.getElementById('startSlot'); SLOTS.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.textContent=s;slotSelect.appendChild(o);});
+const dateInput=document.getElementById('date');
+const hoursInput=document.getElementById('hours');
+const nameInput=document.getElementById('name');
+const phoneInput=document.getElementById('phone');
+const bookBtn=document.getElementById('bookBtn');
+const msg=document.getElementById('msg');
+const slotsContainer=document.getElementById('slotsContainer');
+const viewDate=document.getElementById('viewDate');
+const bookingsList=document.getElementById('bookingsList');
+const upiModal=document.getElementById('upiModal');
+const upiText=document.getElementById('upiText');
+const upiQR=document.getElementById('upiQR');
+const paidBtn=document.getElementById('paidBtn');
+const upiClose=document.getElementById('upiClose');
+const confirmModal=document.getElementById('confirmModal');
+const confirmOk=document.getElementById('confirmOk');
+const adminBtn=document.getElementById('adminBtn');
+const adminModal=document.getElementById('adminModal');
+const adminLoginBtn=document.getElementById('adminLoginBtn');
+const adminCloseBtn=document.getElementById('adminCloseBtn');
+const adminUser=document.getElementById('adminUser');
+const adminPass=document.getElementById('adminPass');
+const adminMsg=document.getElementById('adminMsg');
+const adminPanel=document.getElementById('adminPanel');
+const adminRows=document.getElementById('adminRows');
+const filterDate=document.getElementById('filterDate');
+const exportBtn=document.getElementById('exportBtn');
+
+// Storage helpers
+function readBookings(){try{return JSON.parse(localStorage.getItem('sv_bookings')||'{}')}catch(e){return {}}}
+function saveBookings(obj){localStorage.setItem('sv_bookings',JSON.stringify(obj))}
+
+// Pricing helpers
+function getPriceForSlotIndex(idx){return (idx<=11)?700:900}
+function calculateTotalPrice(start,hours){let total=0; for(let i=0;i<hours;i++){const idx=(start+i)%SLOTS.length; total+=getPriceForSlotIndex(idx);} return total}
+
+// Availability
+function isAvailable(date,start,hours){const all=readBookings(); const day=all[date]||{}; for(let i=0;i<hours;i++){const idx=(start+i)%SLOTS.length; if(day[idx]) return false;} return true}
+
+// Render color-coded slots
+function renderSlots(date){slotsContainer.innerHTML=''; const all=readBookings(); const day=all[date]||{}; const desiredHours=parseInt(hoursInput.value)||1; SLOTS.forEach((s,i)=>{const el=document.createElement('div'); el.className='slot'; let cls='available', text='Available'; if(day[i]){cls='full'; text='Booked'}else{let partial=false; for(let h=1;h<desiredHours;h++){const idx=(i+h)%SLOTS.length; if(day[idx]){partial=true; break;}} if(partial){cls='partial'; text='Partial'}} el.innerHTML=`<div>${s}</div><div class="${cls}">${text}</div>`; slotsContainer.appendChild(el);});}
+
+// Render bookings list
+def save the day
